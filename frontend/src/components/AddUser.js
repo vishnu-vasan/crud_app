@@ -43,10 +43,10 @@ const AddUser = () => {
         console.log(e.response.data.error);
       });
   };
-  const newUser = () => {
-    setUser(initialUserState);
-    setSubmitted(false);
-  };
+  // const newUser = () => {
+  //   setUser(initialUserState);
+  //   setSubmitted(false);
+  // };
   return (
     <div className="submit-form">
       {submitted ? (

@@ -7,8 +7,6 @@ const User = (props) => {
     id: null,
     name: "",
     role: "",
-    email: "",
-    password: "",
   };
   const [currentUser, setCurrentUser] = useState(initialUserState);
   const [message, setMessage] = useState("");
@@ -34,15 +32,12 @@ const User = (props) => {
   };
 
   const updateUser = () => {
-    // UserDataService.update(currentUser.id, currentUser)
     axios
-      .put(
-        `http://127.0.0.1:8000/api/user-update/${currentUser.id}/`,
-        currentUser
-      )
+      .put(`http://127.0.0.1:8000/router/user/${currentUser.id}/`, currentUser)
       .then((response) => {
         console.log(response.data);
         setMessage("The user was updated successfully!");
+        props.history.push("/users-list");
       })
       .catch((e) => {
         console.log(e);
@@ -50,10 +45,14 @@ const User = (props) => {
   };
 
   const deleteUser = () => {
-    UserDataService.remove(currentUser.id)
+    axios
+      .delete(
+        `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
+        currentUser
+      )
       .then((response) => {
         console.log(response.data);
-        setMessage(response.data.message);
+        setMessage("The user was deleted successfully!");
         props.history.push("/users-list");
       })
       .catch((e) => {
@@ -92,28 +91,6 @@ const User = (props) => {
               />
             </div>
             <br></br>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="text"
-                className="form-control"
-                id="email"
-                value={currentUser.email}
-                onChange={handleInputChange}
-                name="email"
-              />
-            </div>
-            <br></br>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                onChange={handleInputChange}
-                name="password"
-              />
-            </div>
           </form>
           <br></br>
           <button className="btn btn-danger mr-2" onClick={deleteUser}>

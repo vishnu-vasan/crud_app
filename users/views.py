@@ -58,24 +58,24 @@ def user_detail(request, pk):
     return JsonResponse(user_serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['PUT'])
-def user_update(request, pk):
-    user = User.objects.get(pk=pk)
-    user_data = JSONParser().parse(request)
-    # if User.objects.filter(email=user_data["email"]).exists():
-    #     return JsonResponse({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
-    user_serializer = UserSerializer(user, data=user_data)
-    if user_serializer.is_valid():
-        user_serializer.save()
-        return JsonResponse(user_serializer.data, status=status.HTTP_200_OK)
-    return JsonResponse(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['PUT'])
+# def user_update(request, pk):
+#     user = User.objects.get(pk=pk)
+#     user_data = JSONParser().parse(request)
+#     # if User.objects.filter(email=user_data["email"]).exists():
+#     #     return JsonResponse({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+#     user_serializer = UserSerializer(user, data=user_data)
+#     if user_serializer.is_valid():
+#         user_serializer.save()
+#         return JsonResponse(user_serializer.data, status=status.HTTP_200_OK)
+#     return JsonResponse(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['DELETE'])
-def user_delete(request, pk):
-    user = User.objects.get(pk=pk)
-    user.delete()
-    return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+# @api_view(['DELETE'])
+# def user_delete(request, pk):
+#     user = User.objects.get(pk=pk)
+#     user.delete()
+#     return JsonResponse({'message': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['POST'])
@@ -110,11 +110,11 @@ def session_view(request):
     return JsonResponse({'isAuthenticated': True})
 
 
-# def whoami_view(request):
-#     if not request.user.is_authenticated:
-#         return JsonResponse({'isAuthenticated': False})
+def whoami_view(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'isAuthenticated': False})
 
-#     return JsonResponse({'username': request.user.username})
+    return JsonResponse({'username': request.user.username})
 
 
 class RegisterView(GenericAPIView):

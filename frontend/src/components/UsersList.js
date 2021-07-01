@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import UserDataService from "../services/UserService";
 import { Link } from "react-router-dom";
 import Login from "../components/Login";
-import Logout from "./Logout";
 import history from "../history";
 
 const UsersList = (props) => {
   const [users, setUsers] = useState([]);
   const [currentuser, setCurrentUser] = useState(null);
   const [isLogin, setisLogin] = useState(props.isAuth);
+  const [username, setUsername] = useState("");
+  const [loggedinUser, setLoggedInUser] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(-1);
   useEffect(() => {
     retrieveUsers();
@@ -26,10 +28,32 @@ const UsersList = (props) => {
         setisLogin(false);
         window.location.href = "/login-user";
       });
+    whoami();
   };
   const setActiveUser = (user, index) => {
     setCurrentUser(user);
     setCurrentIndex(index);
+    setUsername(user.username);
+    var role = user.role;
+    role = role.toLowerCase();
+    if (role === "admin") setIsAdmin(true);
+    else setIsAdmin(false);
+  };
+  const whoami = () => {
+    fetch("/api/whoami/", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("You are logged in as: " + data.username);
+        setLoggedInUser(data.username);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const lgout = () => {
     fetch("/api/user-logout", {
@@ -106,12 +130,16 @@ const UsersList = (props) => {
                 ) : (
                   <div></div>
                 )} */}
-                  <Link
-                    to={"/user-det/" + currentuser.id}
-                    className="btn btn-warning"
-                  >
-                    Edit/View
-                  </Link>
+                  {isAdmin || loggedinUser === username ? (
+                    <Link
+                      to={"/user-det/" + currentuser.id}
+                      className="btn btn-warning"
+                    >
+                      Edit/Delete
+                    </Link>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
               ) : (
                 <div>
