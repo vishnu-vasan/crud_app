@@ -3,19 +3,28 @@ import UserDataService from "../services/UserService";
 import axios from "axios";
 
 const User = (props) => {
-  const initialUserState = {
+  var initialUserState = {
     id: null,
+    username: "",
     name: "",
     role: "",
+    loggedInUser: "",
   };
+  const loggedInUser = props.location.state.lg_user;
+  console.log(props);
+  initialUserState = { ...initialUserState, loggedInUser: loggedInUser };
+  console.log(initialUserState);
   const [currentUser, setCurrentUser] = useState(initialUserState);
+  console.log(currentUser);
   const [message, setMessage] = useState("");
 
   const getUser = (id) => {
     UserDataService.get(id)
       .then((response) => {
-        setCurrentUser(response.data);
-        console.log(response.data);
+        var final = response.data;
+        final["loggedInUser"] = loggedInUser;
+        setCurrentUser(final);
+        console.log(final);
       })
       .catch((e) => {
         console.log(e);
@@ -32,24 +41,15 @@ const User = (props) => {
   };
 
   const updateUser = () => {
-    axios
-      .put(`http://127.0.0.1:8000/router/user/${currentUser.id}/`, currentUser)
-      .then((response) => {
-        console.log(response.data);
-        setMessage("The user was updated successfully!");
-        props.history.push("/users-list");
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
-  const deleteUser = () => {
-    axios
-      .delete(
-        `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
-        currentUser
-      )
+    axios({
+      method: "put",
+      url: `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      data: currentUser,
+    })
       .then((response) => {
         console.log(response.data);
         setMessage("The user was deleted successfully!");
@@ -57,15 +57,51 @@ const User = (props) => {
       })
       .catch((e) => {
         console.log(e);
+        console.log(e.response);
+        if (e.response.status == 403) setMessage("You cannot update this user");
+        console.log(message);
+        props.history.push("/users-list");
       });
   };
 
+  const deleteUser = () => {
+    axios({
+      method: "delete",
+      url: `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+      data: currentUser,
+    })
+      .then((response) => {
+        setMessage("The user was deleted successfully!");
+        props.history.push("/users-list");
+      })
+      .catch((e) => {
+        console.log(e);
+        if (e.response.status == 403) setMessage("You cannot delete this user");
+        props.history.push("/users-list");
+      });
+  };
   return (
     <div>
       {currentUser ? (
         <div className="edit-form">
           <h4>User Detail:</h4>
           <form>
+            <br></br>
+            <div className="form-group">
+              <label htmlFor="name">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                id="username"
+                value={currentUser.username}
+                onChange={handleInputChange}
+                name="username"
+              />
+            </div>
             <br></br>
             <div className="form-group">
               <label htmlFor="name">Name</label>

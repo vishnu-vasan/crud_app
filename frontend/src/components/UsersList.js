@@ -8,10 +8,8 @@ const UsersList = (props) => {
   const [users, setUsers] = useState([]);
   const [currentuser, setCurrentUser] = useState(null);
   const [isLogin, setisLogin] = useState(props.isAuth);
-  const [username, setUsername] = useState("");
-  const [loggedinUser, setLoggedInUser] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(-1);
+  const [logUser, setLogUser] = useState("");
   useEffect(() => {
     retrieveUsers();
   }, []);
@@ -33,11 +31,6 @@ const UsersList = (props) => {
   const setActiveUser = (user, index) => {
     setCurrentUser(user);
     setCurrentIndex(index);
-    setUsername(user.username);
-    var role = user.role;
-    role = role.toLowerCase();
-    if (role === "admin") setIsAdmin(true);
-    else setIsAdmin(false);
   };
   const whoami = () => {
     fetch("/api/whoami/", {
@@ -49,7 +42,7 @@ const UsersList = (props) => {
       .then((res) => res.json())
       .then((data) => {
         console.log("You are logged in as: " + data.username);
-        setLoggedInUser(data.username);
+        setLogUser(data.username);
       })
       .catch((err) => {
         console.log(err);
@@ -109,6 +102,12 @@ const UsersList = (props) => {
                   </div>
                   <div>
                     <label>
+                      <strong>Username:</strong>
+                    </label>{" "}
+                    {currentuser.username}
+                  </div>
+                  <div>
+                    <label>
                       <strong>Role:</strong>
                     </label>{" "}
                     {currentuser.role}
@@ -119,6 +118,7 @@ const UsersList = (props) => {
                     </label>{" "}
                     {currentuser.email}
                   </div>
+
                   <br></br>
                   {/* {currentuser.role === "admin" ? (
                   <Link
@@ -130,16 +130,15 @@ const UsersList = (props) => {
                 ) : (
                   <div></div>
                 )} */}
-                  {isAdmin || loggedinUser === username ? (
-                    <Link
-                      to={"/user-det/" + currentuser.id}
-                      className="btn btn-warning"
-                    >
-                      Edit/Delete
-                    </Link>
-                  ) : (
-                    <div></div>
-                  )}
+                  <Link
+                    to={{
+                      pathname: "/user-det/" + currentuser.id,
+                      state: { lg_user: logUser },
+                    }}
+                    className="btn btn-warning"
+                  >
+                    View
+                  </Link>
                 </div>
               ) : (
                 <div>

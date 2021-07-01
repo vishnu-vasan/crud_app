@@ -9,9 +9,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         username = attrs.get('username', '')
+        email = attrs.get('email', '')
         if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError(
-                {'username': ('Username is already taken!')})
+            if attrs.get('id', '') is not None:
+                pass
+            else:
+                raise serializers.ValidationError(
+                    {'username': ('Username is already taken!')})
+        if User.objects.filter(email=email).exists():
+            if attrs.get('id', '') is not None:
+                pass
+            else:
+                raise serializers.ValidationError(
+                    {'email': ('Email is already taken!')})
         return super().validate(attrs)
 
     def create(self, validated_data):
