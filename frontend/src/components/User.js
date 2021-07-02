@@ -11,8 +11,13 @@ const User = (props) => {
     loggedInUser: "",
   };
   const loggedInUser = props.location.state.lg_user;
+  const lgUserRole = props.location.state.role;
   console.log(props);
-  initialUserState = { ...initialUserState, loggedInUser: loggedInUser };
+  initialUserState = {
+    ...initialUserState,
+    loggedInUser: loggedInUser,
+    lgUserRole: lgUserRole,
+  };
   console.log(initialUserState);
   const [currentUser, setCurrentUser] = useState(initialUserState);
   console.log(currentUser);
@@ -23,6 +28,7 @@ const User = (props) => {
       .then((response) => {
         var final = response.data;
         final["loggedInUser"] = loggedInUser;
+        final["lgUserRole"] = lgUserRole;
         setCurrentUser(final);
         console.log(final);
       })
@@ -58,9 +64,9 @@ const User = (props) => {
       .catch((e) => {
         console.log(e);
         console.log(e.response);
-        if (e.response.status == 403) setMessage("You cannot update this user");
+        if (e.response.status === 403)
+          setMessage("You cannot update this user");
         console.log(message);
-        props.history.push("/users-list");
       });
   };
 
@@ -80,9 +86,12 @@ const User = (props) => {
       })
       .catch((e) => {
         console.log(e);
-        if (e.response.status == 403) setMessage("You cannot delete this user");
-        props.history.push("/users-list");
+        if (e.response.status === 403)
+          setMessage("You cannot delete this user");
       });
+  };
+  const back = () => {
+    props.history.push("/users-list");
   };
   return (
     <div>
@@ -129,18 +138,30 @@ const User = (props) => {
             <br></br>
           </form>
           <br></br>
-          <button className="btn btn-danger mr-2" onClick={deleteUser}>
-            Delete
-          </button>
+          {lgUserRole === "admin" || currentUser.username === loggedInUser ? (
+            <button className="btn btn-danger mr-2" onClick={deleteUser}>
+              Delete
+            </button>
+          ) : (
+            <div></div>
+          )}
           {"  "}
-          <button
-            type="submit"
-            className="btn btn-warning"
-            onClick={updateUser}
-          >
-            Update User
-          </button>
+          {currentUser.username === loggedInUser ? (
+            <button
+              type="submit"
+              className="btn btn-warning"
+              onClick={updateUser}
+            >
+              Update User
+            </button>
+          ) : (
+            <div></div>
+          )}
           <p>{message}</p>
+          <br></br>
+          <button className="btn btn-danger mr-2" onClick={back}>
+            Go back
+          </button>
         </div>
       ) : (
         <div>

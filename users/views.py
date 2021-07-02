@@ -88,7 +88,7 @@ def user_login(request):
     # user_serializer = UserSerializer(data=user_data, many=False)
     if user is None:
         print("------")
-        return JsonResponse({'error': "not able to create"}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'error': "not able to login"}, status=status.HTTP_401_UNAUTHORIZED)
     else:
         print(user)
         login(request, user)
@@ -114,7 +114,7 @@ def whoami_view(request):
     if not request.user.is_authenticated:
         return JsonResponse({'isAuthenticated': False})
 
-    return JsonResponse({'username': request.user.username})
+    return JsonResponse({'username': request.user.username, 'role': request.user.role, })
 
 
 class RegisterView(GenericAPIView):

@@ -14,7 +14,7 @@ class UserViewset(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if instance.role == 'admin' or instance.username == request.data["loggedInUser"]:
+        if request.data["lgUserRole"] == 'admin' or instance.username == request.data["loggedInUser"]:
             user = User.objects.get(pk=instance.id)
             print(user)
             user.delete()
@@ -25,15 +25,19 @@ class UserViewset(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+        print(instance.username)
+        print(request.data)
         if instance.username == request.data["loggedInUser"]:
             kwargs['partial'] = True
             # return self.update(request, *args, **kwargs)
-            super().update(*args, **kwargs)
-            # user = User.objects.get(pk=instance.id)
-            # user_data = JSONParser().parse(request.data)
-            # user_serializer = serializers.UserSerializer(user, data=user_data)
-            # if user_serializer.is_valid():
-            #     user_serializer.save()
-            #     return JsonResponse(user_serializer.data, status=status.HTTP_200_OK)
+            # super().update(*args, **kwargs)
+            user = User.objects.get(pk=instance.id)
+            final = request.data
+            del final['loggedInUser']
+            del final['lgUserRole']
+            user_serializer = serializers.UserSerializer(user, data=final)
+            if user_serializer.is_valid():
+                user_serializer.save()
+            return JsonResponse({"message": "User updated"}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({"message": "User cannot be updated"}, status=status.HTTP_403_FORBIDDEN)

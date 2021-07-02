@@ -10,6 +10,7 @@ const UsersList = (props) => {
   const [isLogin, setisLogin] = useState(props.isAuth);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [logUser, setLogUser] = useState("");
+  const [role, setRole] = useState("");
   useEffect(() => {
     retrieveUsers();
   }, []);
@@ -43,6 +44,7 @@ const UsersList = (props) => {
       .then((data) => {
         console.log("You are logged in as: " + data.username);
         setLogUser(data.username);
+        setRole(data.role);
       })
       .catch((err) => {
         console.log(err);
@@ -133,7 +135,7 @@ const UsersList = (props) => {
                   <Link
                     to={{
                       pathname: "/user-det/" + currentuser.id,
-                      state: { lg_user: logUser },
+                      state: { lg_user: logUser, role: role },
                     }}
                     className="btn btn-warning"
                   >
