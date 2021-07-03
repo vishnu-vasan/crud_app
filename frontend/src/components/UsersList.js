@@ -7,7 +7,7 @@ import history from "../history";
 const UsersList = (props) => {
   const [users, setUsers] = useState([]);
   const [currentuser, setCurrentUser] = useState(null);
-  const [isLogin, setisLogin] = useState(props.isAuth);
+  const [isLogin, setisLogin] = useState(props.location.state.isAuth);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [logUser, setLogUser] = useState("");
   const [role, setRole] = useState("");

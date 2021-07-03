@@ -3,6 +3,7 @@ import UsersList from "./UsersList";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
 import axios from "axios";
+import { useHistory } from "react-router";
 
 const Login = () => {
   const cookies = new Cookies();
@@ -14,6 +15,7 @@ const Login = () => {
   const [user, setUser] = useState(initialUserState);
   const [authenticated, setauthenticated] = useState(false);
   const [err, setErr] = useState(null);
+  const history = useHistory();
   const setauth = (val) => {
     setauthenticated(val);
   };
@@ -58,6 +60,10 @@ const Login = () => {
       .then((response) => {
         setauthenticated(true);
         console.log("---", authenticated);
+        history.push({
+          pathname: "/users-list",
+          state: { isAuth: authenticated },
+        });
       })
       .catch((e) => {
         if (e.response.status === 401) setErr("Wrong credentials");
@@ -84,7 +90,18 @@ const Login = () => {
   return (
     <div className="submit-form">
       {authenticated ? (
-        <UsersList isAuth={authenticated} />
+        <div>
+          <p>Already Logged in!!</p>
+          <Link
+            to={{
+              pathname: "/users-list",
+              state: { isAuth: authenticated },
+            }}
+            className="btn btn-success"
+          >
+            Click here
+          </Link>
+        </div>
       ) : (
         <div>
           <h1>Log In</h1>

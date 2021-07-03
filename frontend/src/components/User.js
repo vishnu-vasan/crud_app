@@ -91,7 +91,10 @@ const User = (props) => {
       });
   };
   const back = () => {
-    props.history.push("/users-list");
+    props.history.push({
+      pathname: "/users-list",
+      state: { isAuth: true },
+    });
   };
   return (
     <div>
