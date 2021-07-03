@@ -1,7 +1,7 @@
-from rest_framework import serializers
-from .models import User
-
-
+from rest_framework import serializers 
+from users.models import User
+ 
+ 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
                 pass
             else:
                 raise serializers.ValidationError(
-                    {'username': ('Username is already taken!')})
+                {'username': ('Username is already taken!')})
         if User.objects.filter(email=email).exists():
             if attrs.get('id', '') is not None:
                 pass
