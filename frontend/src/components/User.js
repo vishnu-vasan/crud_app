@@ -7,7 +7,7 @@ const User = (props) => {
     id: null,
     username: "",
     name: "",
-    role: "",
+    role: "user",
     loggedInUser: "",
   };
   const loggedInUser = props.location.state.lg_user;
@@ -49,7 +49,7 @@ const User = (props) => {
   const updateUser = () => {
     axios({
       method: "put",
-      url: `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
+      url: `http://localhost:8000/router/user/${currentUser.id}/`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -58,8 +58,11 @@ const User = (props) => {
     })
       .then((response) => {
         console.log(response.data);
-        setMessage("The user was deleted successfully!");
-        props.history.push("/users-list");
+        setMessage("The user was updated successfully!");
+        props.history.push({
+          pathname: "/users-list",
+          state: { isAuth: true },
+        });
       })
       .catch((e) => {
         console.log(e);
@@ -73,7 +76,7 @@ const User = (props) => {
   const deleteUser = () => {
     axios({
       method: "delete",
-      url: `http://127.0.0.1:8000/router/user/${currentUser.id}/`,
+      url: `http://localhost:8000/router/user/${currentUser.id}/`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -82,7 +85,10 @@ const User = (props) => {
     })
       .then((response) => {
         setMessage("The user was deleted successfully!");
-        props.history.push("/users-list");
+        props.history.push({
+          pathname: "/users-list",
+          state: { isAuth: true },
+        });
       })
       .catch((e) => {
         console.log(e);
@@ -129,14 +135,16 @@ const User = (props) => {
             <br></br>
             <div className="form-group">
               <label htmlFor="role">Role</label>
-              <input
-                type="text"
-                className="form-control"
+              <br></br>
+              <select
                 id="role"
-                value={currentUser.role}
+                defaultValue={currentUser.role}
                 onChange={handleInputChange}
                 name="role"
-              />
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
             <br></br>
           </form>

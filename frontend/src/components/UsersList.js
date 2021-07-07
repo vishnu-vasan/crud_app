@@ -3,6 +3,7 @@ import UserDataService from "../services/UserService";
 import { Link } from "react-router-dom";
 import Login from "../components/Login";
 import history from "../history";
+import { useHistory } from "react-router";
 
 const UsersList = (props) => {
   const [users, setUsers] = useState([]);
@@ -11,6 +12,7 @@ const UsersList = (props) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [logUser, setLogUser] = useState("");
   const [role, setRole] = useState("");
+  const history1 = useHistory();
   useEffect(() => {
     retrieveUsers();
   }, []);
@@ -34,7 +36,7 @@ const UsersList = (props) => {
     setCurrentIndex(index);
   };
   const whoami = () => {
-    fetch("/api/whoami/", {
+    fetch("http://127.0.0.1:8000/api/whoami/", {
       headers: {
         "Content-Type": "application/json",
       },
@@ -51,21 +53,21 @@ const UsersList = (props) => {
       });
   };
   const lgout = () => {
-    fetch("/api/user-logout", {
+    fetch("http://127.0.0.1:8000/api/user-logout", {
       credentials: "same-origin",
     })
       .then((response) => {
         // console.log(response.data);
         setisLogin(false);
+        history1.push("/login-user");
       })
       .catch((e) => {
         console.log(e);
       });
-    history.push("/login-user");
   };
   return (
-    <>
-      {isLogin ? (
+    <div className="userlist">
+      {isLogin && (
         <div>
           <div class="btn-lgout">
             <button className="btn btn-warning" onClick={lgout}>
@@ -151,10 +153,8 @@ const UsersList = (props) => {
             </div>
           </div>
         </div>
-      ) : (
-        <Login />
       )}
-    </>
+    </div>
   );
 };
 

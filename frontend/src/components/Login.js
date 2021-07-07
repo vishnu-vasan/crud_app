@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import UsersList from "./UsersList";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
 import axios from "axios";
-import { useHistory } from "react-router";
+import { createBrowserHistory } from "history";
 
 const Login = () => {
   const cookies = new Cookies();
@@ -15,7 +15,7 @@ const Login = () => {
   const [user, setUser] = useState(initialUserState);
   const [authenticated, setauthenticated] = useState(false);
   const [err, setErr] = useState(null);
-  const history = useHistory();
+  const history = createBrowserHistory();
   const setauth = (val) => {
     setauthenticated(val);
   };
@@ -73,36 +73,10 @@ const Login = () => {
       });
   };
 
-  // const getSession = () => {
-  //   fetch("/api/session", {
-  //     credentials: "same-origin",
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       if (data.isAuthenticated) {
-  //         setauthenticated(true);
-  //       } else {
-  //         setauthenticated(false);
-  //       }
-  //     });
-  // };
   return (
     <div className="submit-form">
-      {authenticated ? (
-        <div>
-          <p>Already Logged in!!</p>
-          <Link
-            to={{
-              pathname: "/users-list",
-              state: { isAuth: authenticated },
-            }}
-            className="btn btn-success"
-          >
-            Click here
-          </Link>
-        </div>
-      ) : (
+      {!authenticated ? (
+        // <UsersList isAuth={authenticated} />
         <div>
           <h1>Log In</h1>
           <div className="form-group">
@@ -151,6 +125,19 @@ const Login = () => {
           </Link>
           <br></br>
           {err ? <p>{err}</p> : <p></p>}
+        </div>
+      ) : (
+        <div>
+          <p>Already Logged in!!</p>
+          <Link
+            to={{
+              pathname: "/users-list",
+              state: { isAuth: authenticated },
+            }}
+            className="btn btn-success"
+          >
+            Click here
+          </Link>
         </div>
       )}
     </div>

@@ -7,7 +7,7 @@ const AddUser = () => {
   const initialUserState = {
     name: "",
     username: "",
-    role: "",
+    role: "user",
     email: "",
     password: "",
   };
@@ -84,7 +84,7 @@ const AddUser = () => {
               name="username"
             />
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="role">Role</label>
             <input
               type="text"
@@ -95,6 +95,20 @@ const AddUser = () => {
               onChange={handleInputChange}
               name="role"
             />
+          </div> */}
+          <div className="form-group">
+            <label htmlFor="role">Role</label>
+            <br></br>
+            <select
+              id="role"
+              defaultValue={user.role}
+              onChange={handleInputChange}
+              name="role"
+              required
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>

@@ -114,12 +114,12 @@ DATABASES = {
         'NAME': 'users_crud_task2',
         'USER': 'postgres',
         'PASSWORD': 'vasan212001',
-        'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
 
-
+# 'HOST': '127.0.0.1',
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

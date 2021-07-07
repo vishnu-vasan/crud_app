@@ -16,7 +16,6 @@ class UserViewset(viewsets.ModelViewSet):
         instance = self.get_object()
         if request.data["lgUserRole"] == 'admin' or instance.username == request.data["loggedInUser"]:
             user = User.objects.get(pk=instance.id)
-            print(user)
             user.delete()
             return JsonResponse({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         else:
@@ -25,8 +24,6 @@ class UserViewset(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(instance.username)
-        print(request.data)
         if instance.username == request.data["loggedInUser"]:
             kwargs['partial'] = True
             # return self.update(request, *args, **kwargs)
