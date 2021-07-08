@@ -1,0 +1,26 @@
+images: docker:stable
+ 
+stages:
+  - lint 
+  - build
+  - test
+ 
+variables:
+   IMAGE: "gitlab registry url here"
+ 
+lint:
+   stage: lint
+   script:
+       - black backend/ users/ manage.py
+       
+build:
+   stage: build
+   script:
+       - docker build
+         --cache-from $IMAGE:latest
+         --tag $IMAGE:latest
+         --file prod.Dockerfile
+         "."
+test:
+   stage: test
+   image: $IMAGE:latest
