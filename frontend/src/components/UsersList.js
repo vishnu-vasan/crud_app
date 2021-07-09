@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import UserDataService from "../services/UserService";
 import { Link } from "react-router-dom";
-import Login from "../components/Login";
-import history from "../history";
 import { useHistory } from "react-router";
 
 const UsersList = (props) => {
@@ -137,7 +135,11 @@ const UsersList = (props) => {
                   <Link
                     to={{
                       pathname: "/user-det/" + currentuser.id,
-                      state: { lg_user: logUser, role: role },
+                      state: {
+                        lg_user: logUser,
+                        role: role,
+                        username: currentuser.username,
+                      },
                     }}
                     className="btn btn-warning"
                   >

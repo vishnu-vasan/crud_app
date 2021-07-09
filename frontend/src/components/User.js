@@ -12,6 +12,7 @@ const User = (props) => {
   };
   const loggedInUser = props.location.state.lg_user;
   const lgUserRole = props.location.state.role;
+  const initialUser = props.location.state.username;
   console.log(props);
   initialUserState = {
     ...initialUserState,
@@ -149,7 +150,7 @@ const User = (props) => {
             <br></br>
           </form>
           <br></br>
-          {lgUserRole === "admin" || currentUser.username === loggedInUser ? (
+          {lgUserRole === "admin" || initialUser === loggedInUser ? (
             <button className="btn btn-danger mr-2" onClick={deleteUser}>
               Delete
             </button>
@@ -157,7 +158,7 @@ const User = (props) => {
             <div></div>
           )}
           {"  "}
-          {currentUser.username === loggedInUser ? (
+          {initialUser === loggedInUser ? (
             <button
               type="submit"
               className="btn btn-warning"
